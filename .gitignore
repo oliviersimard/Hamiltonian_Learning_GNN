@@ -8,12 +8,7 @@
 *.h5py
 *.h5
 *.tar.gz
-\[a\]*.*
-minimal_example/data*
 models/*
+Equilibrium/Datasets/*
 .venv/*
-ED_data_generation/*
-AnnaCode/*
-minimal_example/old_files/*
 Mg_*/
-dataset_*/
