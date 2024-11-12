@@ -8,6 +8,7 @@
 *.h5py
 *.h5
 *.tar.gz
+.DS_Store
 models/*
 .venv/*
 Mg_*/
