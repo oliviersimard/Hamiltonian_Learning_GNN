@@ -118,8 +118,7 @@ class NodeEdgePNA(torch.nn.Module):
         Args:
             node_in_channels: embedding dimension of the node features, i.e magnetization.
             edge_in_channels: embedding dimension of the edge features, i.e nearest-neighbor correlation functions.
-            out_channels_node: node feature space output dimensionality of the GNN.
-            out_channels_edge: edge feature space output dimensionality of the GNN.
+            out_channels: node feature space output dimensionality of the GNN.
             hidden_channels: number of hidden channels in the message-passing mechanism.
             deg_histogram: degree of destination nodes in the graph. Used for normalization.
             num_layers: the number of GNN layers, i.e the number of message-passing procedures.

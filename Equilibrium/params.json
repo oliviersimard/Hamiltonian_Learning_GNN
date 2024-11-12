@@ -12,7 +12,7 @@
         "warmup_ratio": 0.1,
         "minimum_lr_ratio": 0.05,
         "weight_decay": 1e-2,
-        "num_epochs": 10,
+        "num_epochs": 550,
         "batch_sizes": [64, 64, 64],
         "is_early_stopping": false
     },

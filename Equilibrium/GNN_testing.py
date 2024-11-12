@@ -65,7 +65,7 @@ if __name__=='__main__':
     save_to_one_shots = parameters["save_to_one_shots"]
     save_variances = parameters["save_variances"]
     test_samples = int(portion*total_samples)
-    datasets = ['training'] # to get the largest size
+    datasets = ['testing'] # to get the largest size
     realizations = [test_samples] #np.random.randint(0,high=total_samples,size=test_samples) # number of disorder realizations per training, validation, and test set PER system size
     print(f"realizations = {realizations}")
     print_freq = 5
