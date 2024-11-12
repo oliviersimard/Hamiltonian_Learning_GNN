@@ -9,6 +9,5 @@
 *.h5
 *.tar.gz
 models/*
-Equilibrium/Datasets/*
 .venv/*
 Mg_*/

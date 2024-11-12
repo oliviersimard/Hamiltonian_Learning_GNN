@@ -35,3 +35,5 @@ But first, the parameters contained in `params.json` are described for clarity, 
 23. save_variances: save the variances of the NN correlators or not.
 24. folder_models: path to folder that will contain the trained model.
 25. folder_datasets: path to folder containing datasets from with to train/test.
+
+The `params.json` file contains the set of values used throughout the work. Simply run the command `python3 GNN_training.py` to perform training, making sure you have untared the file containing the datasets in `./Equilibrium/Datasets/dataset_X_Mg_NN_NNN_delta_hist/`. Upon completion, this will produce a `*.pt` file in `./Equilibrium/TrainedModels/Mg_NN_NNN_delta_hist/models/dataset_X_Mg_NN_NNN_delta_hist/`. This is the trained model utilized for testing later on. After having performed training, simply change the parameter `total_samples` to 200. The file `GNN_testing.py` is set to test all the sizes considered in this work by default, so no need to change the parameter `Ls`.

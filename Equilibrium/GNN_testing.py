@@ -65,7 +65,7 @@ if __name__=='__main__':
     save_to_one_shots = parameters["save_to_one_shots"]
     save_variances = parameters["save_variances"]
     test_samples = int(portion*total_samples)
-    datasets = ['testing'] # to get the largest size
+    datasets = ['test'] # to get the largest size
     realizations = [test_samples] #np.random.randint(0,high=total_samples,size=test_samples) # number of disorder realizations per training, validation, and test set PER system size
     print(f"realizations = {realizations}")
     print_freq = 5
@@ -90,7 +90,7 @@ if __name__=='__main__':
             dict_cases[case_study] == "Mg + 1 + NN + NNN + 1 + delta history" or 
             dict_cases[case_study] == "Mg + NN + NNN + delta history + ZX"
         ):
-            test_loader, _, _ = load_datasets_mag_NN_NNN_δ(realizations, 
+            _, _, test_loader = load_datasets_mag_NN_NNN_δ(realizations, 
                                                             [Ls], 
                                                             num_δs, 
                                                             incl_scnd = incl_scnd, 
@@ -101,7 +101,7 @@ if __name__=='__main__':
                                                             datasets = datasets,
                                                             batch_sizes = [batch_size])
         elif dict_cases[case_study] == "Mg + NN + delta history":
-            test_loader, _, _ = load_datasets_mag_NN_δ(realizations, 
+            _, _, test_loader = load_datasets_mag_NN_δ(realizations, 
                                                         [Ls], 
                                                         num_δs, 
                                                         trgt_diff = trgt_diff, 
@@ -109,7 +109,7 @@ if __name__=='__main__':
                                                         datasets = datasets,
                                                         batch_sizes = [batch_size])
         elif dict_cases[case_study] == "Mg + delta history":
-            test_loader, _, _ = load_datasets_mag_NN_δ(realizations, 
+            _, _, test_loader = load_datasets_mag_NN_δ(realizations, 
                                                         [Ls], 
                                                         num_δs, 
                                                         trgt_diff = trgt_diff, 
@@ -117,7 +117,7 @@ if __name__=='__main__':
                                                         datasets = datasets,
                                                         batch_sizes = [batch_size])
         elif dict_cases[case_study] == "Mg + NN + NNN + single delta":
-            test_loader, _, _ = load_datasets_mag_NN_NNN_one_δ(realizations, 
+            _, _, test_loader = load_datasets_mag_NN_NNN_one_δ(realizations, 
                                                         [Ls], 
                                                         delta,
                                                         incl_scnd = incl_scnd,

@@ -1,5 +1,5 @@
 {
-    "case_study": 2,
+    "case_study": 0,
     "GNN_hyperparameters":
     {
         "num_layers": 4,
@@ -27,6 +27,6 @@
     },
     "save_to_one_shots": true,
     "save_variances": false,
-    "folder_models": "./TrainedModels/Mg_NN_NNN_delta_hist/models/",
+    "folder_models": "./TrainedModels/Mg_delta_hist/models/",
     "folder_datasets": "./Datasets/dataset_X_Mg_NN_NNN_delta_hist"
 }
