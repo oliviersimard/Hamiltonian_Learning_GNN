@@ -11,3 +11,4 @@
 models/*
 .venv/*
 Mg_*/
+__pycache__/*

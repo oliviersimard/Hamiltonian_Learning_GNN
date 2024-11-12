@@ -62,12 +62,13 @@ if __name__=='__main__':
     # Training set hyperparameters
     Ls = parameters["Physical_hyperparameters"]["Ls"]
     total_samples = parameters["Physical_hyperparameters"]["total_samples"] # 2000
-    num_δs = parameters["Physical_hyperparameters"]["num_δs"] # 10
-    portion = 0.1
-    training_samples = int(total_samples*(1.-2.*portion))
-    validation_samples = int(total_samples*portion)
-    test_samples = int(total_samples*portion)
+    portions = parameters["Physical_hyperparameters"]["portions"] # proportions of the total number of samples dedicated to the training dataset (1st slot), validation dataset (2nd slot) and test dataset (3rd slot).
+    training_samples = int(total_samples*portions[0]) # should 80 %
+    validation_samples = int(total_samples*portions[1]) # should be 10 %
+    test_samples = int(total_samples*portions[2]) # should be 10 %
     num_realizations = [training_samples, validation_samples, test_samples] # number of disorder realizations per training, validation, and test set PER system size
+    num_δs = parameters["Physical_hyperparameters"]["num_δs"] # 10
+
     print_freq = 5
     load_former_models = parameters["Physical_hyperparameters"]["load_former_models"] # whether to load previously saved model if compatible
     incl_scnd = parameters["Physical_hyperparameters"]["incl_scnd"] # whether the relative/full distances to second-nearest neighbors is included in the target set
@@ -91,7 +92,7 @@ if __name__=='__main__':
     train_loader, validation_loader, test_loader = None, None, None
     if (
         dict_cases[case_study] == "Mg + NN + NNN + delta history" or 
-        dict_cases[case_study] == "Mg + 1 + NN + NNN + delta history" or 
+        dict_cases[case_study] == "Mg + NN + NNN + 1 + delta history" or 
         dict_cases[case_study] == "Mg + 1 + NN + NNN + 1 + delta history" or 
         dict_cases[case_study] == "Mg + NN + NNN + delta history + ZX"
         ):
@@ -323,7 +324,8 @@ if __name__=='__main__':
 
     plotting = datetime.datetime.now()
 
-    # Plot the losses
+    # Plot the losses and other metrics
+
     fig, ax = plt.subplots(nrows=1, sharex=True)
     fig.subplots_adjust(hspace=0.1)
     
@@ -333,7 +335,6 @@ if __name__=='__main__':
     ax.set_yscale("log")
     ax.set_title("Losses plots")
     ax.legend()
-    # fig.savefig(model_folder + "/losses_" + run_name + ".png")
 
     # Plot the R^2 across the training
     fig2, ax2 = plt.subplots(nrows=1)
@@ -344,7 +345,6 @@ if __name__=='__main__':
     ax2.set_xlabel('epochs')
     ax2.set_title("$R^2$ plots")
     ax2.legend()
-    # fig2.savefig(model_folder + "/R2_" + run_name + ".png")
 
     # plot predictions vs targets
     fig3, ax3 = plt.subplots()
@@ -353,10 +353,7 @@ if __name__=='__main__':
     ax3.set_title(r"Edge prediction values")
     ax3.set_xlabel(r'Target values')
     ax3.set_ylabel(r'Predicted values')
-    #ax3.set_ylim(bottom=0.4,top=0.8) # trained in the AFM part
-    #ax3.set_xlim(left=0.4,right=0.8) # trained in the AFM part
     ax3.plot(np.arange(0.4,0.8,200),np.arange(0.4,0.8,200),ls='-',c='k',lw=3)
-    # fig3.savefig(model_folder + "edge_prediction_values_" + run_name + ".pdf")
 
     # Plot the mae across the training
     fig_mae, ax_mae = plt.subplots(nrows=1)
@@ -367,7 +364,6 @@ if __name__=='__main__':
     ax_mae.set_xlabel('epochs')
     ax_mae.set_title("Mean absolute error")
     ax_mae.legend()
-    # fig_mae.savefig(model_folder + "/MAE_" + run_name + ".png")
 
     # Plot the mape across the training
     fig_mape, ax_mape = plt.subplots(nrows=1)
@@ -378,7 +374,6 @@ if __name__=='__main__':
     ax_mape.set_xlabel('epochs')
     ax_mape.set_title("Mean absolute percentage error")
     ax_mape.legend()
-    # fig_mape.savefig(model_folder + "/MAPE_" + run_name + ".png")
 
     if not os.path.exists(path_to_save):
         os.makedirs(path_to_save)

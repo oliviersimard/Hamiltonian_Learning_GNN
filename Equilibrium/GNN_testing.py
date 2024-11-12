@@ -58,13 +58,11 @@ if __name__=='__main__':
 
     # Doing the testing for all the sizes considered 
     LLs = ['4x4','5x5','6x6','7x6','7x7','8x7','8x8','9x8','9x9']
-    total_samples = parameters["Physical_hyperparameters"]["total_samples"] # 200
-    portion = 0.8
+    test_samples = parameters["Physical_hyperparameters"]["total_samples"] # 200
     incl_scnd = parameters["Physical_hyperparameters"]["incl_scnd"] # whether the relative/full distances to second-nearest neighbors is included in the target set
     trgt_diff = parameters["Physical_hyperparameters"]["trgt_diff"] # whether the GNN is trained over the relative distances or the full distances between neighbors 
     save_to_one_shots = parameters["save_to_one_shots"]
     save_variances = parameters["save_variances"]
-    test_samples = int(portion*total_samples)
     datasets = ['test'] # to get the largest size
     realizations = [test_samples] #np.random.randint(0,high=total_samples,size=test_samples) # number of disorder realizations per training, validation, and test set PER system size
     print(f"realizations = {realizations}")
@@ -220,7 +218,8 @@ if __name__=='__main__':
             elif num_δs>1:
                 validation_r2_mean[key].append(np.mean(validation_r2[key]))
 
-        # Plot the losses
+        # Plot the losses and other metrics
+
         path_to_fig,_ = split_string_around_substring(model_path,'_lr_')
 
         fig, ax = plt.subplots(nrows=1, sharex=True, figsize=(10,8))
@@ -237,8 +236,6 @@ if __name__=='__main__':
         ax.set_ylabel("Predictions",fontsize=20)
         ax.tick_params(axis='both',which='major',labelsize=18)
         ax.set_title("Targets vs predictions",fontsize=20)
-        # ax.legend()
-        # fig.savefig("./Figs/Targets_vs_preds_{}_".format('x'.join(list(map(lambda x: str(x),Ls)))) + run_name + '_{}'.format(os.path.basename(data_folder)) + ".pdf", dpi=10)
 
         # Plot the R^2 across the training
         fig2, ax2 = plt.subplots(nrows=1)
@@ -257,7 +254,6 @@ if __name__=='__main__':
             
         ax2.set_xlabel('graphs')
         ax2.set_title("$R^2$")
-        # fig2.savefig(path_to_fig + "/R2_pred_sizes_{}_".format('_'.join(list(map(lambda x: str(x),Ls)))) + run_name + '_{}'.format(os.path.basename(data_folder)) + ".pdf")
         
         # Plot the mae across the training
         fig3, ax3 = plt.subplots(nrows=1)
@@ -275,7 +271,6 @@ if __name__=='__main__':
             
         ax3.set_xlabel('graphs')
         ax3.set_title("Mean absolute error")
-        # fig3.savefig(path_to_fig + "/MAE_pred_sizes_{}_".format('_'.join(list(map(lambda x: str(x),Ls)))) + run_name + '_{}'.format(os.path.basename(data_folder)) + ".pdf")
 
         # Plot the mae across the training
         fig4, ax4 = plt.subplots(nrows=1)
@@ -293,7 +288,6 @@ if __name__=='__main__':
 
         ax4.set_xlabel('graphs')
         ax4.set_title("Mean absolute percentage error")
-        # fig4.savefig(model_path + "/R2_" + run_name + ".png")
 
         # storing values of metrics per size
         if save_to_one_shots:

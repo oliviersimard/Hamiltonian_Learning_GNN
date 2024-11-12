@@ -1,6 +1,14 @@
+"""
+Filename: files_to_dict.py
+Description: Puts the samples into a Pickle format. This script reads the datasets in folder Datasets to gather them up.
+Author: Olivier Simard
+Date: 2024-08-11
+License: MIT License
+"""
 import numpy as np
 import pickle
 
+# path pointing to dataset folder 
 data_folder = "./Datasets/dataset_X_Mg_NN_NNN_delta_hist"
 
 # cluster sizes

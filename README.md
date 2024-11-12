@@ -26,14 +26,18 @@ But first, the parameters contained in `params.json` are described for clarity, 
 14. is_early_stopping: use early-stopping or not.
 15. Ls: array containing the cluster sizes used during training.
 16. total_samples: total number of samples to be used during training. One sample is defined by its array of Rabi frequencies `num_δs`.
-17. num_δs: number of Rabi frequencies constituting one sample of the dataset.
-18. load_former_models: load fromerly trained model with corresponding set of GNN hyperparameters.
-19. incl_scnd: whether to consider NNN correlators in the loss function during the training.
-20. trgt_diff: whether the targets are expressed in relative NN distances or in absolute distances. Should be kept enabled.
-21. delta: specific value of the Rabi frequency if no array is used. `num_δs` needs to be fixed to 1.
-22. save_to_one_shots: save the metrics evaluated from testing the trained model on testing sets.
-23. save_variances: save the variances of the NN correlators or not.
-24. folder_models: path to folder that will contain the trained model.
-25. folder_datasets: path to folder containing datasets from with to train/test.
+17. portions: proportions of the total number of samples dedicated to the training dataset (1st slot), validation dataset (2nd slot) and test dataset (3rd slot).
+18. num_δs: number of Rabi frequencies constituting one sample of the dataset.
+19. load_former_models: load fromerly trained model with corresponding set of GNN hyperparameters.
+20. incl_scnd: whether to consider NNN correlators in the loss function during the training.
+21. trgt_diff: whether the targets are expressed in relative NN distances or in absolute distances. Should be kept enabled.
+22. delta: specific value of the Rabi frequency if no array is used. `num_δs` needs to be fixed to 1.
+23. save_to_one_shots: save the metrics evaluated from testing the trained model on testing sets.
+24. save_variances: save the variances of the NN correlators or not.
+25. folder_models: path to folder that will contain the trained model.
+26. folder_datasets: path to folder containing datasets from with to train/test.
 
-The `params.json` file contains the set of values used throughout the work. Simply run the command `python3 GNN_training.py` to perform training, making sure you have untared the file containing the datasets in `./Equilibrium/Datasets/dataset_X_Mg_NN_NNN_delta_hist/`. Upon completion, this will produce a `*.pt` file in `./Equilibrium/TrainedModels/Mg_NN_NNN_delta_hist/models/dataset_X_Mg_NN_NNN_delta_hist/`. This is the trained model utilized for testing later on. After having performed training, simply change the parameter `total_samples` to 200. The file `GNN_testing.py` is set to test all the sizes considered in this work by default, so no need to change the parameter `Ls`.
+### Procedure
+
+The `params.json` file contains the set of values used throughout the work. Simply run the command `python3 GNN_training.py` to perform training, making sure you have untared the file containing the datasets in `./Equilibrium/Datasets/dataset_X_Mg_NN_NNN_delta_hist/`. Upon completion, this will produce a `*.pt` file in `./Equilibrium/TrainedModels/Mg_NN_NNN_delta_hist/models/dataset_X_Mg_NN_NNN_delta_hist/`. This is the trained model utilized for testing later on. After having performed training, simply change the parameter `total_samples` to 200. The file `GNN_testing.py` is set to test all the sizes considered in this work by default, so no need to change the parameter `Ls`. Just pass the path to the trained model _pathToTrainedModel_ via the command line ```python3 GNN_testing.py pathToTrainedModel```.
+

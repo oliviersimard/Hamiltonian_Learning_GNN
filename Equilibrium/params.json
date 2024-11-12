@@ -1,5 +1,5 @@
 {
-    "case_study": 0,
+    "case_study": 3,
     "GNN_hyperparameters":
     {
         "num_layers": 4,
@@ -19,6 +19,7 @@
     "Physical_hyperparameters":{
         "Ls": ["4x4","5x5","6x6"], 
         "total_samples": 2000,
+        "portions": [0.8,0.1,0.1],
         "num_δs": 10,
         "load_former_models": false,
         "incl_scnd": false,
@@ -27,6 +28,6 @@
     },
     "save_to_one_shots": true,
     "save_variances": false,
-    "folder_models": "./TrainedModels/Mg_delta_hist/models/",
+    "folder_models": "./TrainedModels/Mg_NN_NNN_1_delta_hist/models/",
     "folder_datasets": "./Datasets/dataset_X_Mg_NN_NNN_delta_hist"
 }
