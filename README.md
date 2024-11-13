@@ -47,7 +47,7 @@ After having trained `case_study` 0, 1, 2, 3, 4 and 5, run the Python file `plt_
 
 > `python3 plt_extrapol_dffrt_trn_sizes_mrgns.py $PATH_TO_CASE_STUDY_0 $PATH_TO_CASE_STUDY_1 $PATH_TO_CASE_STUDY_2 $PATH_TO_CASE_STUDY_3 $PATH_TO_CASE_STUDY_4 $PATH_TO_CASE_STUDY_4`
 
-This will produce a pdf file stored in `./Equilibrium/Figs/` to compare with Fig. (4) in the paper. It can be compared with the example pdf it should produce `extrapolation_GNN_TO_COMPARE.pdf`.
+This will produce a pdf file stored in `./Equilibrium/Figs/` to compare with Fig. (4) in the paper. It can be compared with the example pdf it should produce `extrapolation_GNN_TO_COMPARE.pdf`. Note that this example does not produce the statistics associated with the error bars, as one would have to launch a whole bunch of calculations for each study case.
 
 If any questions, contact me: olivier.simard (AT) polytechnique.edu
 
