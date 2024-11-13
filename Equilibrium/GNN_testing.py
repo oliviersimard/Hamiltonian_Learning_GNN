@@ -84,7 +84,7 @@ if __name__=='__main__':
     for Ls in LLs:
         if (
             dict_cases[case_study] == "Mg + NN + NNN + delta history" or 
-            dict_cases[case_study] == "Mg + 1 + NN + NNN + delta history" or 
+            dict_cases[case_study] == "Mg + NN + NNN + 1 + delta history" or 
             dict_cases[case_study] == "Mg + 1 + NN + NNN + 1 + delta history" or 
             dict_cases[case_study] == "Mg + NN + NNN + delta history + ZX"
         ):

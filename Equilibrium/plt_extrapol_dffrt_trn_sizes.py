@@ -1,33 +1,39 @@
+"""
+Filename: plt_extrapol_dffrt_trn_sizes.py
+Description: Script used to produce figures in the paper. In particular, ffor the example, selecting the variable type="GNN" produces figure 4 in the paper. 
+The paths to all the files produced through executing the file `GNN_training.py`, starting with "cluster_one_shots_*.h5" need to be passed in via the command line.
+Author: Olivier Simard
+Date: 2024-08-11
+License: MIT License
+"""
 import numpy as np
 import matplotlib.pyplot as plt
 import sys
 import h5py
 from re import search
 from matplotlib.ticker import (AutoMinorLocator)
-from HamL import split_string_around_substring
 
 # Enable LaTeX
 plt.rcParams['text.usetex'] = True
 plt.rcParams['text.latex.preamble'] = r'\usepackage{amsmath}'  # For additional LaTeX packages
 
 dict_labels = {
-    'Mg+delta+hist': r'Case $\#1$',
-    'Mg+NN+delta+hist': r'Case $\#2$',
-    'Mg+NN+NNN+delta+hist': r'Case $\#3$',
-    'Mg+NN+NNN+1+delta+hist': r'Case $\#4$',
-    'Mg+1+NN+NNN+1+delta+hist': r'Case $\#5$',
+    'Mg+delta+hist': r'$\#1$',
+    'Mg+NN+delta+hist': r'$\#2$',
+    'Mg+NN+NNN+delta+hist': r'$\#3$',
+    'Mg+NN+NNN+1+delta+hist': r'$\#4$',
+    'Mg+1+NN+NNN+1+delta+hist': r'$\#5$',
     'Mg+NN+NNN+X+delta+hist': r'$\#6$'
 }
 
 if __name__=='__main__':
-
+    ORDER_CONVERSION = 1000
     MS = 3.5
     LABELSIZE = 18
     FONTSIZE = 24
     LEGENDSIZE = 18
     MARKER = 'D'
-    ALPHA = 1.0
-    COLORS = ['black','grey','lightgrey','goldenrod','darkorange','darkred']
+    COLORS = ['black','grey','lightgrey','goldenrod','darkorange','tomato']
 
     TYPE = 'GNN' # TRGT, GNN, SNPT or SIZE
 
@@ -41,7 +47,7 @@ if __name__=='__main__':
     elif TYPE=='GNN': # compare various edge features in GNN
         figname = "./Figs/extrapolation_GNN.pdf"
     elif TYPE=="SNPT":
-        COLORS_2 = ['black','silver','khaki','tan','deepskyblue','cyan','darkred','red','darkgreen','green','darkorange','orange'][::2]
+        COLORS_2 = ['black','silver','khaki','tan','deepskyblue','cyan','darkred','red']
         figname = "./Figs/extrapolation_SNPT.pdf"
 
     assert len(sys.argv) > 1, "Need to provide the path to the hdf5 file containing the metrics."
@@ -65,21 +71,22 @@ if __name__=='__main__':
         ax[1].tick_params(labelbottom=False,bottom=False,which='both')
 
         if TYPE=='TRGT':
-            ax[0].text(0.5,0.6,r"$R^2$",transform=ax[0].transAxes,fontsize=18)
-            ax[1].text(0.5,0.6,'MAE',transform=ax[1].transAxes,fontsize=18)
-            ax[2].text(0.5,0.6,'MEDAE',transform=ax[2].transAxes,fontsize=18)
+            ax[0].text(0.45,0.5,r"$R^2$",transform=ax[0].transAxes,fontsize=18)
+            ax[1].text(0.45,0.5,'MAE',transform=ax[1].transAxes,fontsize=18)
+            ax[2].text(0.45,0.5,'MEDAE',transform=ax[2].transAxes,fontsize=18)
         elif TYPE=='SIZE':
             ax[0].text(0.75,0.5,r"$R^2$",transform=ax[0].transAxes,fontsize=18)
             ax[1].text(0.75,0.5,'MAE',transform=ax[1].transAxes,fontsize=18)
             ax[2].text(0.75,0.5,'MEDAE',transform=ax[2].transAxes,fontsize=18)
         elif TYPE=="SNPT":
-            ax[0].text(0.8,0.05,r"$R^2$",transform=ax[0].transAxes,fontsize=18)
-            ax[1].text(0.8,0.05,'MAE',transform=ax[1].transAxes,fontsize=18)
-            ax[2].text(0.8,0.05,'MEDAE',transform=ax[2].transAxes,fontsize=18)
+            ax[0].text(0.8,0.8,r"$R^2$",transform=ax[0].transAxes,fontsize=18)
+            ax[1].text(0.8,0.8,'MAE',transform=ax[1].transAxes,fontsize=18)
+            ax[2].text(0.8,0.8,'MEDAE',transform=ax[2].transAxes,fontsize=18)
             
         for aa in ax:
             if TYPE=='TRGT':
                 aa.axvspan(2-0.02,2+0.02,color='gray',alpha=0.5)
+                aa.axvspan(3-0.02,3+0.02,color='gray',alpha=1.0)
             elif TYPE=='SIZE':
                 aa.axvspan(1-0.02,1+0.02,color=COLORS_2[0],alpha=0.5)
                 aa.axvspan(2-0.02,2+0.02,color=COLORS_2[1],alpha=0.5)
@@ -111,62 +118,53 @@ if __name__=='__main__':
                 if "Mg_1_" in path_to_data:
                     tmp = dict_labels['Mg+1+NN+NNN+1+delta+hist']
                 else:
-                    tmp = dict_labels['Mg+NN+NNN+X+delta+hist']
+                    tmp = dict_labels['Mg+NN+NNN+delta+hist']
                 label = "{} ({})".format(smpl,tmp)
 
             xs = np.arange(len(extrapol_sizes))
             key = 'R2'
-            ys_mean, ys_stderr = [], []
             for ii,kk in enumerate(training_sizes):
+                ys = []
                 for ext in extrapol_sizes:
-                    dat_mean = data_dict[kk+'/'+ext+'/'+key+'_MEAN']
-                    dat_stderr = data_dict[kk+'/'+ext+'/'+key+'_STDERR']
-                    ys_mean.append(dat_mean)
-                    ys_stderr.append(dat_stderr)
+                    dat = data_dict[kk+'/'+ext+'/'+key]
+                    ys.append(dat)
                 if TYPE=='SIZE':
                     label = '{}'.format(training_sizes[ii].replace('_',' '))
-            ax[0].errorbar(xs,ys_mean,yerr=ys_stderr,color=COLORS_2[cc],marker='.',barsabove=True,label=label,elinewidth=2.0,alpha=ALPHA,capsize=5)
-            # ax[0].fill_between(xs,np.array(ys_mean)-np.array(ys_stderr),np.array(ys_mean)-np.array(ys_stderr),alpha=ALPHA,color=COLORS_2[cc])
+            ax[0].plot(xs,ys,ms=MS,marker=MARKER,label=label,c=COLORS_2[cc])
             if TYPE=='SIZE':
-                ax[0].set_ylim(top=1.0,bottom=0.97)
+                ax[0].set_ylim(top=1.0,bottom=0.93)
             elif TYPE=='TRGT':
-                ax[0].set_ylim(top=1.0,bottom=0.85)
+                ax[0].set_ylim(top=1.0,bottom=0.95)
             elif TYPE=='SNPT':
                 ax[0].set_ylim(top=1.0,bottom=-0.1)
 
             key = 'MAE'
-            ys_mean, ys_stderr = [], []
+            ys = []
             for kk in training_sizes:
                 for ext in extrapol_sizes:
-                    dat_mean = data_dict[kk+'/'+ext+'/'+key+'_MEAN']
-                    dat_stderr = data_dict[kk+'/'+ext+'/'+key+'_STDERR']
-                    ys_mean.append(dat_mean)
-                    ys_stderr.append(dat_stderr)
-            ax[1].errorbar(xs,np.array(ys_mean)*1000,yerr=np.array(ys_stderr)*1000,color=COLORS_2[cc],marker='.',barsabove=True,elinewidth=2.0,alpha=ALPHA,capsize=5)
-            # ax[1].fill_between(xs,(np.array(ys_mean)-np.array(ys_stderr))*1000,(np.array(ys_mean)-np.array(ys_stderr))*1000,alpha=ALPHA,color=COLORS_2[cc])
+                    dat = data_dict[kk+'/'+ext+'/'+key]
+                    ys.append(dat)
+            ax[1].plot(xs,np.array(ys)*1000,ms=MS,marker=MARKER,c=COLORS_2[cc])
             if TYPE=='SIZE':
-                ax[1].set_ylim(bottom=0.0,top=0.01*1000)
-            elif TYPE=='TRGT':
                 ax[1].set_ylim(bottom=0.0,top=0.02*1000)
+            elif TYPE=='TRGT':
+                ax[1].set_ylim(bottom=0.0,top=0.015*1000)
             elif TYPE=='SNPT':
-                ax[1].set_ylim(bottom=0.0,top=0.071*1000)
+                ax[1].set_ylim(bottom=0.0,top=0.05)
 
             key = 'MEDAE'
-            ys_mean, ys_stderr = [], []
+            ys = []
             for kk in training_sizes:
                 for ext in extrapol_sizes:
-                    dat_mean = data_dict[kk+'/'+ext+'/'+key+'_MEAN']
-                    dat_stderr = data_dict[kk+'/'+ext+'/'+key+'_STDERR']
-                    ys_mean.append(dat_mean)
-                    ys_stderr.append(dat_stderr)
-            ax[2].errorbar(xs,np.array(ys_mean)*1000,yerr=np.array(ys_stderr)*1000,color=COLORS_2[cc],marker='.',barsabove=True,elinewidth=2.0,alpha=ALPHA,capsize=5)
-            # ax[2].fill_between(xs,(np.array(ys_mean)-np.array(ys_stderr))*1000,(np.array(ys_mean)-np.array(ys_stderr))*1000,alpha=ALPHA,label='median absolute error',color=COLORS_2[cc])
+                    dat = data_dict[kk+'/'+ext+'/'+key]
+                    ys.append(dat)
+            ax[2].plot(xs,np.array(ys)*1000,ms=MS,marker=MARKER,label='median absolute error',c=COLORS_2[cc])
             if TYPE=='SIZE':
-                ax[2].set_ylim(bottom=0.0,top=0.003*1000)
+                ax[2].set_ylim(bottom=0.0,top=0.015*1000)
             elif TYPE=='TRGT':
-                ax[2].set_ylim(bottom=0.0,top=0.0075*1000)
+                ax[2].set_ylim(bottom=0.0,top=0.015*1000)
             elif TYPE=='SNPT':
-                ax[2].set_ylim(bottom=0.0,top=0.06*1000)
+                ax[2].set_ylim(bottom=0.0,top=0.015)
 
             plt.xticks(xs, extrapol_sizes, rotation='vertical')
 
@@ -176,9 +174,9 @@ if __name__=='__main__':
         ax[2].set_xlabel("Cluster size",fontsize=FONTSIZE)
 
         if TYPE=='SNPT':
-            ax[0].legend(ncol=3, prop={'size': 20}, bbox_to_anchor=(1.0, 1.52), borderaxespad=0, handletextpad=0.2, handlelength=0.8)
+            ax[0].legend(ncol=4, prop={'size': 20}, bbox_to_anchor=(1.0, 1.52), borderaxespad=0, handletextpad=0.2, handlelength=0.8)
         else:
-            ax[0].legend(ncol=2, prop={'size': 20}, bbox_to_anchor=(1.0, 1.52), borderaxespad=0, handletextpad=0.2, handlelength=1.0)
+            ax[0].legend(ncol=2, prop={'size': 20}, bbox_to_anchor=(1.0, 1.32), borderaxespad=0, handletextpad=0.2, handlelength=1.0)
 
     elif TYPE == 'GNN':
         d = .01  # how big to make the diagonal lines in axes coordinates
@@ -196,9 +194,9 @@ if __name__=='__main__':
         for ii in range(len(ax)-1):
             ax[ii].tick_params(labelbottom=False,bottom=False,which='both')
         
-        ax[0].text(0.75,0.35,r"$R^2$",transform=ax[0].transAxes,fontsize=18)
-        ax[2].text(0.75,0.35,'MAE',transform=ax[2].transAxes,fontsize=18)
-        ax[4].text(0.75,0.35,'MEDAE',transform=ax[4].transAxes,fontsize=18)
+        ax[0].text(0.75,0.5,r"$R^2$",transform=ax[0].transAxes,fontsize=18)
+        ax[2].text(0.75,0.5,'MAE',transform=ax[2].transAxes,fontsize=18)
+        ax[4].text(0.75,0.5,'MEDAE',transform=ax[4].transAxes,fontsize=18)
         
         for aa in ax:
             aa.axvspan(2-0.02,2+0.02,color='gray',alpha=0.5)
@@ -219,62 +217,48 @@ if __name__=='__main__':
             print(f"extrapol sizes = {extrapol_sizes}")
 
             label = path_to_data.split('/')[1].replace('_','+')
-            print(f"label = {label}")
             label = dict_labels[label]
 
             xs = np.arange(len(extrapol_sizes))
             key = 'R2'
-            ys_mean, ys_stderr = [], []
+            ys = []
             for ii,kk in enumerate(training_sizes):
                 for ext in extrapol_sizes:
-                    dat_mean = data_dict[kk+'/'+ext+'/'+key+'_MEAN']
-                    dat_stderr = data_dict[kk+'/'+ext+'/'+key+'_STDERR']
-                    ys_mean.append(dat_mean)
-                    ys_stderr.append(dat_stderr)
-            print(ys_mean)
-            print(ys_stderr)
-            # ax[0].fill_between(xs,(np.array(ys_mean)-np.array(ys_stderr)),(np.array(ys_mean)+np.array(ys_stderr)),alpha=ALPHA,label=label,color=COLORS[cc])
-            ax[0].errorbar(xs,ys_mean,yerr=ys_stderr,color=COLORS[cc],marker='.',barsabove=True,label=label,elinewidth=2.0,alpha=1.0,capsize=5)
-            # ax[1].fill_between(xs,(np.array(ys_mean)-np.array(ys_stderr)),(np.array(ys_mean)+np.array(ys_stderr)),alpha=ALPHA,color=COLORS[cc])
-            ax[1].errorbar(xs,ys_mean,yerr=ys_stderr,color=COLORS[cc],marker='.',barsabove=True,label=label,elinewidth=2.0,alpha=1.0,capsize=5)
+                    dat = data_dict[kk+'/'+ext+'/'+key]
+                    ys.append(dat)
+            
+            ax[0].plot(xs,ys,ms=MS,marker=MARKER,label=label,c=COLORS[cc])
+            ax[1].plot(xs,ys,ms=MS,marker=MARKER,c=COLORS[cc])
             
             # zoom-in / limit the view to different portions of the data
             ax[0].set_ylim(.98, 1.)  # outliers only
             ax[1].set_ylim(-.01, .6)  # most of the data
 
             key = 'MAE'
-            ys_mean, ys_stderr = [], []
+            ys = []
             for kk in training_sizes:
                 for ext in extrapol_sizes:
-                    dat_mean = data_dict[kk+'/'+ext+'/'+key+'_MEAN']
-                    dat_stderr = data_dict[kk+'/'+ext+'/'+key+'_STDERR']
-                    ys_mean.append(dat_mean)
-                    ys_stderr.append(dat_stderr)
-            # ax[2].fill_between(xs,(np.array(ys_mean)-np.array(ys_stderr))*1000,(np.array(ys_mean)+np.array(ys_stderr))*1000,alpha=ALPHA,color=COLORS[cc])
-            ax[2].errorbar(xs,np.array(ys_mean)*1000,yerr=np.array(ys_stderr)*1000,color=COLORS[cc],marker='.',barsabove=True,elinewidth=2.0,alpha=1.0,capsize=5)
-            # ax[3].fill_between(xs,(np.array(ys_mean)-np.array(ys_stderr))*1000,(np.array(ys_mean)+np.array(ys_stderr))*1000,alpha=ALPHA,color=COLORS[cc])
-            ax[3].errorbar(xs,np.array(ys_mean)*1000,yerr=np.array(ys_stderr)*1000,color=COLORS[cc],marker='.',barsabove=True,elinewidth=2.0,alpha=1.0,capsize=5)
+                    dat = data_dict[kk+'/'+ext+'/'+key]
+                    ys.append(dat)
+            ax[2].plot(xs,np.array(ys)*ORDER_CONVERSION,ms=MS,marker=MARKER,c=COLORS[cc])
+            ax[3].plot(xs,np.array(ys)*ORDER_CONVERSION,ms=MS,marker=MARKER,c=COLORS[cc])
 
             # zoom-in / limit the view to different portions of the data
-            ax[2].set_ylim(.04*1000, .07*1000)  # outliers only
-            ax[3].set_ylim(.0*1000, .01*1000)  # most of the data
+            ax[2].set_ylim(.04*ORDER_CONVERSION, .07*ORDER_CONVERSION)  # outliers only
+            ax[3].set_ylim(.0*ORDER_CONVERSION, .01*ORDER_CONVERSION)  # most of the data
 
             key = 'MEDAE'
-            ys_mean, ys_stderr = [], []
+            ys = []
             for kk in training_sizes:
                 for ext in extrapol_sizes:
-                    dat_mean = data_dict[kk+'/'+ext+'/'+key+'_MEAN']
-                    dat_stderr = data_dict[kk+'/'+ext+'/'+key+'_STDERR']
-                    ys_mean.append(dat_mean)
-                    ys_stderr.append(dat_stderr)
-            # ax[4].fill_between(xs,(np.array(ys_mean)-np.array(ys_stderr))*1000,(np.array(ys_mean)+np.array(ys_stderr))*1000,alpha=ALPHA,label='median absolute error',color=COLORS[cc])
-            ax[4].errorbar(xs,np.array(ys_mean)*1000,yerr=np.array(ys_stderr)*1000,color=COLORS[cc],marker='.',barsabove=True,elinewidth=2.0,alpha=1.0,capsize=5)
-            # ax[5].fill_between(xs,(np.array(ys_mean)-np.array(ys_stderr))*1000,(np.array(ys_mean)+np.array(ys_stderr))*1000,alpha=ALPHA,color=COLORS[cc])
-            ax[5].errorbar(xs,np.array(ys_mean)*1000,yerr=np.array(ys_stderr)*1000,color=COLORS[cc],marker='.',barsabove=True,elinewidth=2.0,alpha=1.0,capsize=5)
+                    dat = data_dict[kk+'/'+ext+'/'+key]
+                    ys.append(dat)
+            ax[4].plot(xs,np.array(ys)*ORDER_CONVERSION,ms=MS,marker=MARKER,label='median absolute error',c=COLORS[cc])
+            ax[5].plot(xs,np.array(ys)*ORDER_CONVERSION,ms=MS,marker=MARKER,c=COLORS[cc])
 
             # zoom-in / limit the view to different portions of the data
-            ax[4].set_ylim(.03*1000, .06*1000)  # outliers only
-            ax[5].set_ylim(-.001*1000, .01*1000)  # most of the data
+            ax[4].set_ylim(.029*ORDER_CONVERSION, .06*ORDER_CONVERSION)  # outliers only
+            ax[5].set_ylim(-.001*ORDER_CONVERSION, .01*ORDER_CONVERSION)  # most of the data
 
             # hide the spines between ax and ax2
             ax[0].spines['bottom'].set_visible(False)

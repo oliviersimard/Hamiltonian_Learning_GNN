@@ -43,11 +43,11 @@ The `params.json` file contains the set of values used throughout the work. Simp
 
 After having performed training, simply change the parameter `total_samples` to 200. The file `GNN_testing.py` is set to test all sizes considered in this work by default, so NO need to change the parameter `Ls` in `params.json`. Then, just pass the path to the trained model $pathToTrainedModel via the command line `python3 GNN_testing.py $pathToTrainedModel`. After testing, a file in HDF5 format containing performance metrics is stored, for this example, under `./Equilibrium/TrainedModels/Mg_NN_NNN_delta_hist/models/dataset_X_Mg_NN_NNN_delta_hist/trans_Ising_inclscdn_False_trgtdiff_True_totsmpl_2000_hidC_32_hidE_4_hidN_4_NLay_4_Ndeltas_10_outC_32_sizes_4x4_5x5_6x6/`.
 
-After having trained `case_study` 0, 1, 2, 3, 4 and 5, run the Python file `plt_extrapol_dffrt_trn_sizes_mrgns.py` and pass to it via the command line all the HDF5 format performance metric files produced by `GNN_testing.py`, in the order described at the beginning of this sentence:
+After having trained `case_study` 0, 1, 2, 3, 4 and 5, run the Python file `plt_extrapol_dffrt_trn_sizes.py` and pass to it via the command line all the HDF5 format performance metric files produced by `GNN_testing.py`, whose name starts with "cluster_one_shots_*.h5", in the order described at the beginning of this sentence:
 
 > `python3 plt_extrapol_dffrt_trn_sizes_mrgns.py $PATH_TO_CASE_STUDY_0 $PATH_TO_CASE_STUDY_1 $PATH_TO_CASE_STUDY_2 $PATH_TO_CASE_STUDY_3 $PATH_TO_CASE_STUDY_4 $PATH_TO_CASE_STUDY_4`
 
-This will produce a pdf file stored in `./Equilibrium/Figs/` to compare with Fig. (4) in the paper.
+This will produce a pdf file stored in `./Equilibrium/Figs/` to compare with Fig. (4) in the paper. It can be compared with the example pdf it should produce `extrapolation_GNN_TO_COMPARE.pdf`.
 
 If any questions, contact me: olivier.simard (AT) polytechnique.edu
 
